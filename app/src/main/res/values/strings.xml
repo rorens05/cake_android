@@ -1,0 +1,4 @@
+<resources>
+    <string name="app_name">Pristine Pastries</string>
+    <string name="title_activity_product_info">ProductInfoActivity</string>
+</resources>
