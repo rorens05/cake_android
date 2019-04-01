@@ -12,6 +12,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.example.pristinepastries.Activities.CakeListActivity;
+import com.example.pristinepastries.Activities.ProductInfoActivity;
 import com.example.pristinepastries.R;
 import com.example.pristinepastries.engine.GlobalVariables;
 import com.example.pristinepastries.models.Cake;
@@ -48,7 +49,7 @@ public class CakeAdapter extends
             public void onClick(View v) {
                 //TODO add on click listener
                 GlobalVariables.selectedCake = GlobalVariables.cakeList.get(i);
-
+                context.startActivity(new Intent(context, ProductInfoActivity.class));
             }
         });
 
