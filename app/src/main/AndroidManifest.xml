@@ -11,7 +11,13 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".Activities.COD"></activity>
+        <activity android:name=".Activities.SignupActivity"></activity>
+        <activity android:name=".Activities.OrderInformationActivity" />
+        <activity android:name=".Activities.OrderListActivity" />
+        <activity
+            android:name=".testing"
+            android:label="@string/title_activity_testing" />
+        <activity android:name=".Activities.COD" />
         <activity android:name=".Activities.PaymentMethods" />
         <activity android:name=".Activities.ProductInfoActivity" />
         <activity android:name=".Activities.CakeListActivity" />

@@ -1,12 +1,16 @@
 package com.example.pristinepastries.Activities;
 
 import android.app.ProgressDialog;
+import android.content.Intent;
+import android.support.v4.app.NavUtils;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.widget.Toast;
 
 import com.android.volley.Request;
@@ -118,5 +122,36 @@ public class CakeListActivity extends AppCompatActivity {
         dividerItemDecoration.setDrawable(getApplicationContext().getResources().getDrawable(R.drawable.mdivider));
         recyclerView.addItemDecoration(dividerItemDecoration);
         recyclerView.setLayoutManager(linearLayoutManager);
+    }
+
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        //return super.onCreateOptionsMenu(menu);
+        getMenuInflater().inflate(R.menu.my_menu, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+
+        switch (item.getItemId()) {
+
+            case android.R.id.home:
+                NavUtils.navigateUpFromSameTask(this);
+                return true;
+
+            case R.id.orders_item:
+                startActivity(new Intent(this, OrderListActivity.class));
+                return true;
+            case R.id.profile_item:
+                Toast.makeText(this, "yep profile was clicked", Toast.LENGTH_SHORT).show();
+                return true;
+
+        }
+
+
+        return super.onOptionsItemSelected(item);
+
     }
 }
