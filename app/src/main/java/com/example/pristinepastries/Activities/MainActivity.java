@@ -18,6 +18,7 @@ import com.android.volley.toolbox.StringRequest;
 import com.example.pristinepastries.R;
 import com.example.pristinepastries.engine.GlobalVariables;
 import com.example.pristinepastries.engine.MySingleton;
+import com.example.pristinepastries.models.User;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -67,6 +68,22 @@ public class MainActivity extends AppCompatActivity {
                     Toast.makeText(MainActivity.this, message, Toast.LENGTH_SHORT).show();
                     if (status.equalsIgnoreCase("success")) {
                         Log.d(TAG, "correct username and password");
+                        JSONObject user = jResponse.getJSONObject("user");
+                        GlobalVariables.currentUser = new User(
+                            user.getString("id"),
+                            user.getString("name"),
+                            user.getString("address"),
+                            user.getString("contact_no"),
+                            user.getString("email"),
+                            user.getString("gender"),
+                            user.getString("status"),
+                            user.getString("created_at"),
+                            user.getString("updated_at"),
+                            user.getString("password_digest"),
+                            user.getString("image")
+                            );
+                        Log.d(TAG, GlobalVariables.currentUser.toString());
+
                         startActivity(new Intent(MainActivity.this, CategoryActivity.class));
                         finish();
                     }else{

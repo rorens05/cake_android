@@ -44,6 +44,7 @@ public class CakeAdapter extends
     @Override
     public void onBindViewHolder(@NonNull MyViewHolder myViewHolder, final int i) {
         Cake cake = cakeList.get(i);
+        String desc = cake.description.substring(0, 40) + "...";
         myViewHolder.constraintLayout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -68,7 +69,7 @@ public class CakeAdapter extends
         }
 
         myViewHolder.name.setText(cake.name);
-        myViewHolder.description.setText(cake.description);
+        myViewHolder.description.setText(desc);
 
     }
 
