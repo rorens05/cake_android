@@ -2,12 +2,27 @@ package com.example.pristinepastries.Activities;
 
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.view.View;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
+import com.android.volley.AuthFailureError;
+import com.android.volley.Request;
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
+import com.android.volley.toolbox.StringRequest;
 import com.example.pristinepastries.R;
 import com.example.pristinepastries.engine.GlobalVariables;
+import com.example.pristinepastries.engine.MySingleton;
 import com.squareup.picasso.Picasso;
+
+import java.lang.reflect.Method;
+import java.util.HashMap;
+import java.util.Map;
+
+import static android.view.View.GONE;
 
 public class OrderInformationActivity extends AppCompatActivity {
 
@@ -20,6 +35,9 @@ public class OrderInformationActivity extends AppCompatActivity {
     TextView note;
     TextView payment_method;
     ImageView image;
+
+    TextView noteLabel;
+    Button checkout;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -36,7 +54,8 @@ public class OrderInformationActivity extends AppCompatActivity {
         note = findViewById(R.id.textView21);
         payment_method = findViewById(R.id.textView22);
         image = findViewById(R.id.imageView5);
-
+        noteLabel = findViewById(R.id.textView20);
+        checkout = findViewById(R.id.button10);
         name.setText(GlobalVariables.selectedOrder.product_name);
         size.setText("Size: " + GlobalVariables.selectedOrder.size_label);
         size_price.setText("Item price: " + GlobalVariables.selectedOrder.size_price);
@@ -46,6 +65,21 @@ public class OrderInformationActivity extends AppCompatActivity {
         note.setText(GlobalVariables.selectedOrder.note.equalsIgnoreCase("null") ? "" : GlobalVariables.selectedOrder.note );
         payment_method.setText("Payment Method: " + GlobalVariables.selectedOrder.payment_method);
 
+        if (GlobalVariables.selectedOrder.cart.equalsIgnoreCase("true")){
+            status.setVisibility(GONE);
+            note.setVisibility(GONE);
+            payment_method.setVisibility(GONE);
+            noteLabel.setVisibility(GONE);
+        }else{
+            checkout.setVisibility(GONE);
+        }
+
+        checkout.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                checkOutCart();
+            }
+        });
 
         try{
             Picasso.get()
@@ -60,6 +94,30 @@ public class OrderInformationActivity extends AppCompatActivity {
                     .centerCrop()
                     .into(image);
         }
+
+    }
+
+    public void checkOutCart(){
+        StringRequest stringRequest = new StringRequest(Request.Method.POST, GlobalVariables.CHECKOUT_CART_URL, new Response.Listener<String>() {
+            @Override
+            public void onResponse(String response) {
+                Toast.makeText(OrderInformationActivity.this, "Success", Toast.LENGTH_SHORT).show();
+                finish();
+            }
+        }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                Toast.makeText(OrderInformationActivity.this, "Failed", Toast.LENGTH_SHORT).show();
+            }
+        }){
+            @Override
+            protected Map<String, String> getParams() throws AuthFailureError {
+                HashMap<String, String> params = new HashMap<>();
+                params.put("id", GlobalVariables.selectedOrder.id);
+                return params;
+            }
+        };
+        MySingleton.getInstance(this).addToRequestQueue(stringRequest);
 
     }
 }

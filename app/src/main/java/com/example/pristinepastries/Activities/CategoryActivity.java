@@ -130,7 +130,7 @@ public class CategoryActivity extends AppCompatActivity {
                 startActivity(new Intent(this, OrderListActivity.class));
                 return true;
             case R.id.profile_item:
-                Toast.makeText(this, "yep profile was clicked", Toast.LENGTH_SHORT).show();
+                startActivity(new Intent(this, ProfileActivity.class));
                 return true;
 
         }

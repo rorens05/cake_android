@@ -8,6 +8,7 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.android.volley.AuthFailureError;
@@ -32,6 +33,7 @@ public class MainActivity extends AppCompatActivity {
     EditText email;
     EditText password;
     ProgressDialog pg;
+    TextView signup;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -40,6 +42,7 @@ public class MainActivity extends AppCompatActivity {
         email = findViewById(R.id.login_email);
         password = findViewById(R.id.login_password);
         login = findViewById(R.id.button);
+        signup = findViewById(R.id.textView2);
         login.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -50,6 +53,13 @@ public class MainActivity extends AppCompatActivity {
 
             }
         });
+        signup.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startActivity(new Intent(MainActivity.this, SignupActivity.class));
+            }
+        });
+
     }
 
     private void login(){
@@ -114,4 +124,6 @@ public class MainActivity extends AppCompatActivity {
         };
         MySingleton.getInstance(this).addToRequestQueue(loginRequest);
     }
+
+
 }

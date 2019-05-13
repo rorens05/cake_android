@@ -3,15 +3,26 @@
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <item
+        android:id="@+id/cart_item"
+        android:icon="@drawable/ic_shopping_cart_black_2_24dp"
+        android:title="Cart"
+        app:showAsAction="always" />
+
+    <item
         android:id="@+id/orders_item"
         android:icon="@drawable/ic_shopping_cart_black_2_24dp"
-        android:title="Orders"
-        app:showAsAction="always" />
+        android:title="Orders" />
 
     <item
         android:id="@+id/profile_item"
         android:icon="@drawable/ic_shopping_cart_black_24dp"
         android:title="Profile"
+        />
+
+    <item
+        android:id="@+id/logout_item"
+        android:icon="@drawable/ic_shopping_cart_black_24dp"
+        android:title="Logout"
         />
 
 </menu>

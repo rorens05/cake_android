@@ -1,16 +1,12 @@
 package com.example.pristinepastries.Activities;
 
 import android.app.ProgressDialog;
-import android.content.Intent;
-import android.support.v4.app.NavUtils;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
-import android.view.Menu;
-import android.view.MenuItem;
 import android.widget.Toast;
 
 import com.android.volley.Request;
@@ -21,7 +17,6 @@ import com.example.pristinepastries.R;
 import com.example.pristinepastries.engine.GlobalVariables;
 import com.example.pristinepastries.engine.MySingleton;
 import com.example.pristinepastries.models.Order;
-import com.example.pristinepastries.templates.CakeAdapter;
 import com.example.pristinepastries.templates.OrderTemplate;
 
 import org.json.JSONArray;
@@ -31,28 +26,28 @@ import org.json.JSONObject;
 import java.util.ArrayList;
 import java.util.List;
 
-public class OrderListActivity extends AppCompatActivity {
-    private static final String TAG = "OrderListActivity";
+public class CartActivity extends AppCompatActivity {
 
+    private static final String TAG = "CartActivity";
     RecyclerView recyclerView;
     List<Order> orderList = new ArrayList<>();
     ProgressDialog pd;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_order_list);
-        recyclerView = findViewById(R.id.order_list_recycler_view);
+        setContentView(R.layout.activity_cart);
+        setTitle("Cart");
+        recyclerView = findViewById(R.id.recycler_view_cart);
         pd = new ProgressDialog(this);
-        pd.setMessage("Loading..");
+        pd.setTitle("Loading cart...");
         pd.setCancelable(false);
-
         loadOrders();
     }
 
     public void loadOrders(){
         pd.show();
         StringRequest stringRequest = new StringRequest(Request.Method.GET,
-                GlobalVariables.GET_ORDER_URL + "?id=" + GlobalVariables.currentUser.id,
+                GlobalVariables.GET_CART_URL + "?id=" + GlobalVariables.currentUser.id,
                 new Response.Listener<String>() {
                     @Override
                     public void onResponse(String response) {
@@ -81,7 +76,6 @@ public class OrderListActivity extends AppCompatActivity {
                                         jsonArray.getJSONObject(i).getString("image"),
                                         jsonArray.getJSONObject(i).getString("cart")
                                 ));
-
                             }
                             loadRecyclerView();
                             pd.dismiss();
@@ -114,37 +108,5 @@ public class OrderListActivity extends AppCompatActivity {
         dividerItemDecoration.setDrawable(getApplicationContext().getResources().getDrawable(R.drawable.mdivider));
         recyclerView.addItemDecoration(dividerItemDecoration);
         recyclerView.setLayoutManager(linearLayoutManager);
-    }
-
-
-
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        //return super.onCreateOptionsMenu(menu);
-        getMenuInflater().inflate(R.menu.my_menu, menu);
-        return true;
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-
-        switch (item.getItemId()) {
-
-            case android.R.id.home:
-                NavUtils.navigateUpFromSameTask(this);
-                return true;
-
-            case R.id.orders_item:
-                startActivity(new Intent(this, OrderListActivity.class));
-                return true;
-            case R.id.profile_item:
-                startActivity(new Intent(this, ProfileActivity.class));
-                return true;
-
-        }
-
-
-        return super.onOptionsItemSelected(item);
-
     }
 }

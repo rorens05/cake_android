@@ -17,6 +17,7 @@ import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.android.volley.AuthFailureError;
 import com.android.volley.Request;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
@@ -32,7 +33,9 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class ProductInfoActivity extends AppCompatActivity {
 
@@ -43,6 +46,7 @@ public class ProductInfoActivity extends AppCompatActivity {
     Spinner sizes;
     EditText amount;
     Button checkout;
+    Button cart;
     List<Sizes> sizeList = new ArrayList<>();
     ProgressDialog pd;
 
@@ -62,6 +66,7 @@ public class ProductInfoActivity extends AppCompatActivity {
         sizes = findViewById(R.id.spinner);
         amount = findViewById(R.id.editText);
         checkout = findViewById(R.id.button3);
+        cart = findViewById(R.id.button9);
         image = findViewById(R.id.imageView4);
 
         name.setText(GlobalVariables.selectedCake.name);
@@ -117,6 +122,12 @@ public class ProductInfoActivity extends AppCompatActivity {
                         checkout();
                     }
                 });
+                cart.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        addToCart();
+                    }
+                });
                 pd.dismiss();
             }
         }, new Response.ErrorListener() {
@@ -150,6 +161,33 @@ public class ProductInfoActivity extends AppCompatActivity {
         startActivity(new Intent(this, PaymentMethods.class));
     }
 
+    public void addToCart(){
+        GlobalVariables.selectedSize = sizeList.get(sizes.getSelectedItemPosition());
+        StringRequest stringRequest = new StringRequest(Request.Method.POST, GlobalVariables.ADD_TO_CART_URL, new Response.Listener<String>() {
+            @Override
+            public void onResponse(String response) {
+                Toast.makeText(ProductInfoActivity.this, "Success", Toast.LENGTH_SHORT).show();
+                finish();
+            }
+        }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                Toast.makeText(ProductInfoActivity.this, "Unable to connect to the server", Toast.LENGTH_SHORT).show();
+            }
+        }){
+            @Override
+            protected Map<String, String> getParams() throws AuthFailureError {
+                HashMap<String, String> params = new HashMap<>();
+                params.put("customer_id", GlobalVariables.currentUser.id);
+                params.put("product_id", GlobalVariables.selectedCake.id);
+                params.put("size_id", GlobalVariables.selectedSize.id);
+                params.put("no_of_items", amount.getText().toString());
+                return params;
+            }
+        };
+        MySingleton.getInstance(this).addToRequestQueue(stringRequest);
+    }
+
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -171,7 +209,7 @@ public class ProductInfoActivity extends AppCompatActivity {
                 startActivity(new Intent(this, OrderListActivity.class));
                 return true;
             case R.id.profile_item:
-                Toast.makeText(this, "yep profile was clicked", Toast.LENGTH_SHORT).show();
+                startActivity(new Intent(this, ProfileActivity.class));
                 return true;
         }
 

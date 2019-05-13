@@ -19,12 +19,9 @@ public class Order {
     public String size_label;
     public String size_price;
     public String image;
+    public String cart;
 
-    public Order(String id, String ordered_at, String customer_id, String product_id,
-                 String size_id, String no_of_items, String payment_method, String status,
-                 String delivery_location, String delivered_at, String created_at,
-                 String updated_at, String note, String product_name, String size_label,
-                 String size_price, String image) {
+    public Order(String id, String ordered_at, String customer_id, String product_id, String size_id, String no_of_items, String payment_method, String status, String delivery_location, String delivered_at, String created_at, String updated_at, String note, String product_name, String size_label, String size_price, String image, String cart) {
         this.id = id;
         this.ordered_at = ordered_at;
         this.customer_id = customer_id;
@@ -42,6 +39,7 @@ public class Order {
         this.size_label = size_label;
         this.size_price = size_price;
         this.image = image;
+        this.cart = cart;
     }
 
     @Override
@@ -64,6 +62,7 @@ public class Order {
                 ", size_label='" + size_label + '\'' +
                 ", size_price='" + size_price + '\'' +
                 ", image='" + image + '\'' +
+                ", cart='" + cart + '\'' +
                 '}';
     }
 }
