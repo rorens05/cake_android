@@ -1,8 +1,12 @@
 package com.example.pristinepastries.Activities;
 
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
+import android.support.v4.app.NavUtils;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
@@ -65,4 +69,59 @@ public class ProfileActivity extends AppCompatActivity {
     }
 
 
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+
+        switch (item.getItemId()) {
+
+            case android.R.id.home:
+                NavUtils.navigateUpFromSameTask(this);
+                return true;
+
+            case R.id.custom_cake:
+                startActivity(new Intent(this, CustomCakeActivity.class));
+                return true;
+            case R.id.cart_item:
+                startActivity(new Intent(this, CartActivity.class));
+                return true;
+            case R.id.orders_item:
+                startActivity(new Intent(this, OrderListActivity.class));
+                return true;
+            case R.id.profile_item:
+                startActivity(new Intent(this, ProfileActivity.class));
+                return true;
+            case R.id.logout_item:
+                AlertDialog.Builder builder = new AlertDialog.Builder(this);
+
+                builder.setTitle("Confirm");
+                builder.setMessage("Are you sure you want to logout?");
+
+                builder.setPositiveButton("YES", new DialogInterface.OnClickListener() {
+
+                    public void onClick(DialogInterface dialog, int which) {
+                        finish();
+                        dialog.dismiss();
+                    }
+                });
+
+                builder.setNegativeButton("NO", new DialogInterface.OnClickListener() {
+
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+
+                        // Do nothing
+                        dialog.dismiss();
+                    }
+                });
+
+                AlertDialog alert = builder.create();
+                alert.show();
+                return true;
+
+        }
+
+
+        return super.onOptionsItemSelected(item);
+
+    }
 }

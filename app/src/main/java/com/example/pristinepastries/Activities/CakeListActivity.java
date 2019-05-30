@@ -143,6 +143,9 @@ public class CakeListActivity extends AppCompatActivity {
                 NavUtils.navigateUpFromSameTask(this);
                 return true;
 
+            case R.id.custom_cake:
+                startActivity(new Intent(this, CustomCakeActivity.class));
+                return true;
             case R.id.cart_item:
                 startActivity(new Intent(this, CartActivity.class));
                 return true;

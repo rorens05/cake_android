@@ -1,6 +1,8 @@
 package com.example.pristinepastries.Activities;
 
+import android.app.AlertDialog;
 import android.app.ProgressDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.support.v4.app.NavUtils;
 import android.support.v7.app.AppCompatActivity;
@@ -45,6 +47,7 @@ public class ProductInfoActivity extends AppCompatActivity {
     TextView category;
     Spinner sizes;
     EditText amount;
+    EditText delivery_location;
     Button checkout;
     Button cart;
     List<Sizes> sizeList = new ArrayList<>();
@@ -65,6 +68,7 @@ public class ProductInfoActivity extends AppCompatActivity {
         category = findViewById(R.id.info_stock2);
         sizes = findViewById(R.id.spinner);
         amount = findViewById(R.id.editText);
+        delivery_location = findViewById(R.id.editText7);
         checkout = findViewById(R.id.button3);
         cart = findViewById(R.id.button9);
         image = findViewById(R.id.imageView4);
@@ -156,6 +160,7 @@ public class ProductInfoActivity extends AppCompatActivity {
     }
 
     public void checkout(){
+        GlobalVariables.delivery_location = delivery_location.getText().toString();
         GlobalVariables.selectedSize = sizeList.get(sizes.getSelectedItemPosition());
         GlobalVariables.selectedAmount = Integer.parseInt(amount.getText().toString());
         startActivity(new Intent(this, PaymentMethods.class));
@@ -177,11 +182,13 @@ public class ProductInfoActivity extends AppCompatActivity {
         }){
             @Override
             protected Map<String, String> getParams() throws AuthFailureError {
+
                 HashMap<String, String> params = new HashMap<>();
                 params.put("customer_id", GlobalVariables.currentUser.id);
                 params.put("product_id", GlobalVariables.selectedCake.id);
                 params.put("size_id", GlobalVariables.selectedSize.id);
                 params.put("no_of_items", amount.getText().toString());
+                params.put("delivery_location", delivery_location.getText().toString());
                 return params;
             }
         };
@@ -205,13 +212,48 @@ public class ProductInfoActivity extends AppCompatActivity {
                 NavUtils.navigateUpFromSameTask(this);
                 return true;
 
+            case R.id.custom_cake:
+                startActivity(new Intent(this, CustomCakeActivity.class));
+                return true;
+            case R.id.cart_item:
+                startActivity(new Intent(this, CartActivity.class));
+                return true;
             case R.id.orders_item:
                 startActivity(new Intent(this, OrderListActivity.class));
                 return true;
             case R.id.profile_item:
                 startActivity(new Intent(this, ProfileActivity.class));
                 return true;
+            case R.id.logout_item:
+                AlertDialog.Builder builder = new AlertDialog.Builder(this);
+
+                builder.setTitle("Confirm");
+                builder.setMessage("Are you sure you want to logout?");
+
+                builder.setPositiveButton("YES", new DialogInterface.OnClickListener() {
+
+                    public void onClick(DialogInterface dialog, int which) {
+                        finish();
+                        dialog.dismiss();
+                    }
+                });
+
+                builder.setNegativeButton("NO", new DialogInterface.OnClickListener() {
+
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+
+                        // Do nothing
+                        dialog.dismiss();
+                    }
+                });
+
+                AlertDialog alert = builder.create();
+                alert.show();
+                return true;
+
         }
+
 
         return super.onOptionsItemSelected(item);
 

@@ -23,6 +23,7 @@ public class GlobalVariables {
     public static final String CHANGE_PASS_URL = SERVER + "change_password";
     public static final String ADD_TO_CART_URL = SERVER + "add_to_cart";
     public static final String CHECKOUT_CART_URL = SERVER + "checkout_cart";
+    public static final String ADDCUSTOMCAKEURL = SERVER + "add_custom_cake";
 
     public static User currentUser = null;
 
@@ -36,4 +37,7 @@ public class GlobalVariables {
     public static int selectedAmount = 0;
 
     public static Order selectedOrder;
+    public static String delivery_location = "";
+
+    public static String selectedPaymentMethod = "COD";
 }

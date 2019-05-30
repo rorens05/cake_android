@@ -37,6 +37,7 @@ public class COD extends AppCompatActivity {
         TextView size_price = findViewById(R.id.ro_price);
         TextView amount = findViewById(R.id.ro_items);
         TextView total = findViewById(R.id.ro_total);
+        TextView pm = findViewById(R.id.ro_payment_method);
         Button confirm = findViewById(R.id.button5);
         pd = new ProgressDialog(this);
         pd.setCancelable(false);
@@ -48,6 +49,7 @@ public class COD extends AppCompatActivity {
         size_name.setText(GlobalVariables.selectedSize.label);
         size_price.setText(GlobalVariables.selectedSize.price);
         amount.setText("" + GlobalVariables.selectedAmount);
+        pm.setText("" + GlobalVariables.selectedPaymentMethod);
         total.setText(totalPrice);
 
         confirm.setOnClickListener(new View.OnClickListener() {
@@ -66,7 +68,9 @@ public class COD extends AppCompatActivity {
                 @Override
                 public void onResponse(String response) {
                     Toast.makeText(COD.this, "Success", Toast.LENGTH_SHORT).show();
+
                     pd.dismiss();
+                    startActivity(new Intent(COD.this, OrderListActivity.class));
                 }
             }, new Response.ErrorListener() {
                 @Override
@@ -79,8 +83,10 @@ public class COD extends AppCompatActivity {
             protected Map<String, String> getParams() throws AuthFailureError {
                 HashMap<String, String> params = new HashMap<>();
                 params.put("customer_id", GlobalVariables.currentUser.id);
+                params.put("payment_method", GlobalVariables.selectedPaymentMethod);
                 params.put("size_id", GlobalVariables.selectedSize.id);
                 params.put("items", String.valueOf(GlobalVariables.selectedAmount));
+                params.put("delivery_location", GlobalVariables.delivery_location);
                 return  params;
             }
         };
