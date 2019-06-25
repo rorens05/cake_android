@@ -48,6 +48,8 @@ public class ProductInfoActivity extends AppCompatActivity {
     Spinner sizes;
     EditText amount;
     EditText delivery_location;
+    EditText barangay;
+    EditText municipality;
     Button checkout;
     Button cart;
     List<Sizes> sizeList = new ArrayList<>();
@@ -68,7 +70,9 @@ public class ProductInfoActivity extends AppCompatActivity {
         category = findViewById(R.id.info_stock2);
         sizes = findViewById(R.id.spinner);
         amount = findViewById(R.id.editText);
-        delivery_location = findViewById(R.id.editText7);
+        delivery_location = findViewById(R.id.editText8);
+        barangay = findViewById(R.id.editText7);
+        municipality = findViewById(R.id.editText9);
         checkout = findViewById(R.id.button3);
         cart = findViewById(R.id.button9);
         image = findViewById(R.id.imageView4);
@@ -160,7 +164,9 @@ public class ProductInfoActivity extends AppCompatActivity {
     }
 
     public void checkout(){
-        GlobalVariables.delivery_location = delivery_location.getText().toString();
+        GlobalVariables.delivery_location = delivery_location.getText().toString() + ", " +
+                barangay.getText().toString() + ", " +
+                municipality.getText().toString();
         GlobalVariables.selectedSize = sizeList.get(sizes.getSelectedItemPosition());
         GlobalVariables.selectedAmount = Integer.parseInt(amount.getText().toString());
         startActivity(new Intent(this, PaymentMethods.class));
@@ -182,13 +188,18 @@ public class ProductInfoActivity extends AppCompatActivity {
         }){
             @Override
             protected Map<String, String> getParams() throws AuthFailureError {
-
+                System.out.println("barangay: " + barangay.getText().toString());
                 HashMap<String, String> params = new HashMap<>();
                 params.put("customer_id", GlobalVariables.currentUser.id);
                 params.put("product_id", GlobalVariables.selectedCake.id);
                 params.put("size_id", GlobalVariables.selectedSize.id);
                 params.put("no_of_items", amount.getText().toString());
-                params.put("delivery_location", delivery_location.getText().toString());
+                params.put("delivery_location",
+                        delivery_location.getText().toString() + ", " +
+                        barangay.getText().toString() + ", " +
+                        municipality.getText().toString()
+
+                );
                 return params;
             }
         };
