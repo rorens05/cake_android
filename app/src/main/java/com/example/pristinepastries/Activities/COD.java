@@ -87,11 +87,11 @@ public class COD extends AppCompatActivity {
                 params.put("size_id", GlobalVariables.selectedSize.id);
                 params.put("items", String.valueOf(GlobalVariables.selectedAmount));
                 params.put("delivery_location", GlobalVariables.delivery_location);
+                params.put("delivery_date", GlobalVariables.delivery_date);
                 return  params;
             }
         };
         MySingleton.getInstance(this).addToRequestQueue(stringRequest);
-        
     }
 
 

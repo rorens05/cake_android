@@ -1,6 +1,7 @@
 package com.example.pristinepastries.Activities;
 
 import android.app.AlertDialog;
+import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Bitmap;
@@ -44,7 +45,7 @@ import java.util.Map;
 
 public class CustomCakeActivity extends AppCompatActivity {
     public static int RESULT_LOAD_IMG = 101;
-    String compressed_bitmap;
+    String compressed_bitmap = "";
 
     Button addImage;
     ImageView image;
@@ -58,12 +59,14 @@ public class CustomCakeActivity extends AppCompatActivity {
     TextView price;
     Button submit;
 
+    ProgressDialog pd;
+
     int Price = 0;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_custom_cake);
-
+        pd = new ProgressDialog(this);
         addImage = findViewById(R.id.button11);
         image = findViewById(R.id.imageView8);
         theme = findViewById(R.id.spinner3);
@@ -90,7 +93,15 @@ public class CustomCakeActivity extends AppCompatActivity {
         submit.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                save();
+                try{
+                    if(compressed_bitmap.equalsIgnoreCase("")){
+                        Toast.makeText(CustomCakeActivity.this, "Please choose image", Toast.LENGTH_SHORT).show();
+                    }else{
+                        save();
+                    }
+                }catch(Exception e){
+                    Toast.makeText(CustomCakeActivity.this, e.toString(), Toast.LENGTH_SHORT).show();
+                }
             }
         });
 
@@ -293,15 +304,21 @@ public class CustomCakeActivity extends AppCompatActivity {
     }
 
     public void save(){
+
+        pd.setTitle("Please wait..");
+        pd.setMessage("Loading..");
+        pd.show();
         StringRequest stringRequest = new StringRequest(Request.Method.POST, GlobalVariables.ADDCUSTOMCAKEURL, new Response.Listener<String>() {
             @Override
             public void onResponse(String response) {
                 Toast.makeText(CustomCakeActivity.this, "Success", Toast.LENGTH_SHORT).show();
+                pd.dismiss();
                 finish();
             }
         }, new Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
+                pd.dismiss();
                 Toast.makeText(CustomCakeActivity.this, "Unable to connect to the server", Toast.LENGTH_SHORT).show();
             }
         }){

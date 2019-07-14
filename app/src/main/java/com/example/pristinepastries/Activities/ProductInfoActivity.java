@@ -1,9 +1,12 @@
 package com.example.pristinepastries.Activities;
 
 import android.app.AlertDialog;
+import android.app.DatePickerDialog;
 import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
 import android.support.v4.app.NavUtils;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -13,6 +16,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.Spinner;
@@ -35,6 +39,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -55,6 +60,8 @@ public class ProductInfoActivity extends AppCompatActivity {
     List<Sizes> sizeList = new ArrayList<>();
     ProgressDialog pd;
 
+    private TextView dateText;
+    DatePickerDialog.OnDateSetListener onDateSetListener;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -65,6 +72,7 @@ public class ProductInfoActivity extends AppCompatActivity {
         pd.setMessage("Loading Sizes");
         pd.setCancelable(false);
 
+        dateText = findViewById(R.id.datePickerText);
         name = findViewById(R.id.info_name);
         description = findViewById(R.id.info_desc2);
         category = findViewById(R.id.info_stock2);
@@ -80,6 +88,37 @@ public class ProductInfoActivity extends AppCompatActivity {
         name.setText(GlobalVariables.selectedCake.name);
         description.setText(GlobalVariables.selectedCake.description);
         category.setText(GlobalVariables.selectedCake.name);
+
+        dateText.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Calendar cal = Calendar.getInstance();
+                int year = cal.get(Calendar.YEAR);
+                int month = cal.get(Calendar.MONTH);
+                int day = cal.get(Calendar.DAY_OF_MONTH);
+
+                DatePickerDialog dialog = new DatePickerDialog(ProductInfoActivity.this,
+                        android.R.style.Theme_Holo_Light_Dialog_MinWidth,
+                        onDateSetListener, year, month, day);
+                dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+                dialog.show();
+
+            }
+        });
+
+        image.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startActivity(new Intent(ProductInfoActivity.this, ImageZoomActivity.class));
+            }
+        });
+
+        onDateSetListener = new DatePickerDialog.OnDateSetListener() {
+            @Override
+            public void onDateSet(DatePicker view, int year, int month, int dayOfMonth) {
+                dateText.setText(month + "-" + dayOfMonth + "-" + year);
+            }
+        };
 
         try{
             Picasso.get()
@@ -169,21 +208,27 @@ public class ProductInfoActivity extends AppCompatActivity {
                 municipality.getText().toString();
         GlobalVariables.selectedSize = sizeList.get(sizes.getSelectedItemPosition());
         GlobalVariables.selectedAmount = Integer.parseInt(amount.getText().toString());
+        GlobalVariables.delivery_date = dateText.getText().toString();
+
         startActivity(new Intent(this, PaymentMethods.class));
     }
 
     public void addToCart(){
+        pd.show();
         GlobalVariables.selectedSize = sizeList.get(sizes.getSelectedItemPosition());
         StringRequest stringRequest = new StringRequest(Request.Method.POST, GlobalVariables.ADD_TO_CART_URL, new Response.Listener<String>() {
             @Override
             public void onResponse(String response) {
                 Toast.makeText(ProductInfoActivity.this, "Success", Toast.LENGTH_SHORT).show();
                 finish();
+                pd.dismiss();
             }
         }, new Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
                 Toast.makeText(ProductInfoActivity.this, "Unable to connect to the server", Toast.LENGTH_SHORT).show();
+                pd.dismiss();
+
             }
         }){
             @Override

@@ -1,5 +1,6 @@
 package com.example.pristinepastries.Activities;
 
+import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
@@ -95,29 +96,17 @@ public class OrderInformationActivity extends AppCompatActivity {
                     .into(image);
         }
 
+        image.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startActivity(new Intent(OrderInformationActivity.this, ImageZoomActivity.class));
+            }
+        });
     }
 
     public void checkOutCart(){
-        StringRequest stringRequest = new StringRequest(Request.Method.POST, GlobalVariables.CHECKOUT_CART_URL, new Response.Listener<String>() {
-            @Override
-            public void onResponse(String response) {
-                Toast.makeText(OrderInformationActivity.this, "Success", Toast.LENGTH_SHORT).show();
-                finish();
-            }
-        }, new Response.ErrorListener() {
-            @Override
-            public void onErrorResponse(VolleyError error) {
-                Toast.makeText(OrderInformationActivity.this, "Failed", Toast.LENGTH_SHORT).show();
-            }
-        }){
-            @Override
-            protected Map<String, String> getParams() throws AuthFailureError {
-                HashMap<String, String> params = new HashMap<>();
-                params.put("id", GlobalVariables.selectedOrder.id);
-                return params;
-            }
-        };
-        MySingleton.getInstance(this).addToRequestQueue(stringRequest);
+        GlobalVariables.isCart = true;
+        startActivity(new Intent(this, PaymentMethods.class));
 
     }
 }

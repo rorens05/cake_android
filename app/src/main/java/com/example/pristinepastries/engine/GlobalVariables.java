@@ -40,4 +40,6 @@ public class GlobalVariables {
     public static String delivery_location = "";
 
     public static String selectedPaymentMethod = "COD";
+    public static String delivery_date = "1-1-2000";
+    public static boolean isCart = false;
 }

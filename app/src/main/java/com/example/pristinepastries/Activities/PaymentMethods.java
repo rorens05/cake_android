@@ -13,8 +13,17 @@ import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.Toast;
 
+import com.android.volley.AuthFailureError;
+import com.android.volley.Request;
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
+import com.android.volley.toolbox.StringRequest;
 import com.example.pristinepastries.R;
 import com.example.pristinepastries.engine.GlobalVariables;
+import com.example.pristinepastries.engine.MySingleton;
+
+import java.util.HashMap;
+import java.util.Map;
 
 public class PaymentMethods extends AppCompatActivity {
 
@@ -34,6 +43,11 @@ public class PaymentMethods extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 GlobalVariables.selectedPaymentMethod = "PALAWAN EXPRESS";
+                if(GlobalVariables.isCart){
+                    checkout();
+                    finish();
+                    return;
+                }
                 startActivity(new Intent(PaymentMethods.this, COD.class));
             }
         });
@@ -42,6 +56,11 @@ public class PaymentMethods extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 GlobalVariables.selectedPaymentMethod = "M-LHUILLIER";
+                if(GlobalVariables.isCart){
+                    checkout();
+                    finish();
+                    return;
+                }
                 startActivity(new Intent(PaymentMethods.this, COD.class));
             }
         });
@@ -50,6 +69,11 @@ public class PaymentMethods extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 GlobalVariables.selectedPaymentMethod = "Cebuana Lhuillier";
+                if(GlobalVariables.isCart){
+                    checkout();
+                    finish();
+                    return;
+                }
                 startActivity(new Intent(PaymentMethods.this, COD.class));
             }
         });
@@ -58,6 +82,11 @@ public class PaymentMethods extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 GlobalVariables.selectedPaymentMethod = "Western Union";
+                if(GlobalVariables.isCart){
+                    checkout();
+                    finish();
+                    return;
+                }
                 startActivity(new Intent(PaymentMethods.this, COD.class));
             }
         });
@@ -66,6 +95,11 @@ public class PaymentMethods extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 GlobalVariables.selectedPaymentMethod = "MoneyGram";
+                if(GlobalVariables.isCart){
+                    checkout();
+                    finish();
+                    return;
+                }
                 startActivity(new Intent(PaymentMethods.this, COD.class));
             }
         });
@@ -74,6 +108,11 @@ public class PaymentMethods extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 GlobalVariables.selectedPaymentMethod = "LBC";
+                if(GlobalVariables.isCart){
+                    checkout();
+                    finish();
+                    return;
+                }
                 startActivity(new Intent(PaymentMethods.this, COD.class));
             }
         });
@@ -82,6 +121,11 @@ public class PaymentMethods extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 GlobalVariables.selectedPaymentMethod = "COD";
+                if(GlobalVariables.isCart){
+                    checkout();
+                    finish();
+                    return;
+                }
                 startActivity(new Intent(PaymentMethods.this, COD.class));
             }
         });
@@ -150,4 +194,30 @@ public class PaymentMethods extends AppCompatActivity {
         return super.onOptionsItemSelected(item);
 
     }
+
+    private void checkout(){
+        GlobalVariables.isCart = false;
+        StringRequest stringRequest = new StringRequest(Request.Method.POST, GlobalVariables.CHECKOUT_CART_URL, new Response.Listener<String>() {
+            @Override
+            public void onResponse(String response) {
+                Toast.makeText(PaymentMethods.this, "Success", Toast.LENGTH_SHORT).show();
+                finish();
+            }
+        }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                Toast.makeText(PaymentMethods.this, "Failed", Toast.LENGTH_SHORT).show();
+            }
+        }){
+            @Override
+            protected Map<String, String> getParams() throws AuthFailureError {
+                HashMap<String, String> params = new HashMap<>();
+                params.put("id", GlobalVariables.selectedOrder.id);
+                params.put("payment_method", GlobalVariables.selectedPaymentMethod);
+                return params;
+            }
+        };
+        MySingleton.getInstance(this).addToRequestQueue(stringRequest);
+
+        }
 }
