@@ -5,6 +5,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -37,8 +38,13 @@ public class OrderInformationActivity extends AppCompatActivity {
     TextView payment_method;
     ImageView image;
 
+    EditText control;
+    EditText sender;
+
+
     TextView noteLabel;
     Button checkout;
+    Button updateControl;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -65,6 +71,17 @@ public class OrderInformationActivity extends AppCompatActivity {
         status.setText("Status: " + GlobalVariables.selectedOrder.status);
         note.setText(GlobalVariables.selectedOrder.note.equalsIgnoreCase("null") ? "" : GlobalVariables.selectedOrder.note );
         payment_method.setText("Payment Method: " + GlobalVariables.selectedOrder.payment_method);
+
+        updateControl = findViewById(R.id.button4);
+        sender = findViewById(R.id.editText11);
+        control = findViewById(R.id.editText10);
+
+        updateControl.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                updateControl();
+            }
+        });
 
         if (GlobalVariables.selectedOrder.cart.equalsIgnoreCase("true")){
             status.setVisibility(GONE);
@@ -108,5 +125,34 @@ public class OrderInformationActivity extends AppCompatActivity {
         GlobalVariables.isCart = true;
         startActivity(new Intent(this, PaymentMethods.class));
 
+    }
+
+    public void updateControl(){
+        StringRequest stringRequest = new StringRequest(Request.Method.POST, GlobalVariables.UPDATE_CONTROL,
+                new Response.Listener<String>() {
+                    @Override
+                    public void onResponse(String response) {
+                        Toast.makeText(OrderInformationActivity.this, "Success", Toast.LENGTH_SHORT).show();
+                    }
+                }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                Toast.makeText(OrderInformationActivity.this, "Error", Toast.LENGTH_SHORT).show();
+            }
+        }){
+            @Override
+            protected Map<String, String> getParams() throws AuthFailureError {
+                HashMap<String, String> params = new HashMap<>();
+                params.put("id", GlobalVariables.selectedOrder.id);
+                params.put("control", control.getText().toString());
+                params.put("sender", sender.getText().toString());
+
+                return params;
+
+            }
+        };
+
+        MySingleton.getInstance(this).addToRequestQueue(stringRequest);
+        
     }
 }

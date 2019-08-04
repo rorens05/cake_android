@@ -24,6 +24,7 @@ public class GlobalVariables {
     public static final String ADD_TO_CART_URL = SERVER + "add_to_cart";
     public static final String CHECKOUT_CART_URL = SERVER + "checkout_cart";
     public static final String ADDCUSTOMCAKEURL = SERVER + "add_custom_cake";
+    public static final String UPDATE_CONTROL = SERVER + "update_control";
 
     public static User currentUser = null;
 
